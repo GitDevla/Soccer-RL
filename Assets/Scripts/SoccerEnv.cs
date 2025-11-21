@@ -102,16 +102,16 @@ public class SoccerEnv : MonoBehaviour
 
     public void GiveRewardToTeam(Team team, float reward)
     {
-        if (team == Team.Red)
-        {
-            redPlayerAgent.AddReward(reward);
-            bluePlayerAgent.AddReward(-reward);
-        }
-        else if (team == Team.Blue)
-        {
-            bluePlayerAgent.AddReward(reward);
-            redPlayerAgent.AddReward(-reward);
-        }
+        // if (team == Team.Red)
+        // {
+        //     redPlayerAgent.AddReward(reward);
+        //     bluePlayerAgent.AddReward(-reward);
+        // }
+        // else if (team == Team.Blue)
+        // {
+        //     bluePlayerAgent.AddReward(reward);
+        //     redPlayerAgent.AddReward(-reward);
+        // }
     }
 
     void FixedUpdate()

@@ -1,0 +1,33 @@
+{
+    "difficulty": {
+        "lesson_num": 0
+    },
+    "Player": {
+        "elo": 1204.0629931500528,
+        "checkpoints": [
+            {
+                "steps": 487744,
+                "file_path": "results/self_play_dense/Player/Player-487744.onnx",
+                "reward": -0.0038910505836575876,
+                "creation_time": 1763738729.9699981,
+                "auxillary_file_paths": [
+                    "results/self_play_dense/Player/Player-487744.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 487744,
+            "file_path": "results/self_play_dense/Player.onnx",
+            "reward": -0.0038910505836575876,
+            "creation_time": 1763738729.9699981,
+            "auxillary_file_paths": [
+                "results/self_play_dense/Player/Player-487744.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cpu"
+    }
+}

@@ -146,7 +146,7 @@ public class PlayerAgent : Agent
         rb.AddForce(dirToGo * moveSpeed, ForceMode.VelocityChange);
 
         rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed);
-        AddReward(1 / envController.maxEnvironmentSteps * -0.5f);
+        // AddReward(1 / envController.maxEnvironmentSteps * -0.5f);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
