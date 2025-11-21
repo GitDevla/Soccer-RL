@@ -25,6 +25,8 @@ enum RotationMovement
     RotateLeft = -1
 }
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(BehaviorParameters))]
 public class PlayerAgent : Agent
 {
     private Rigidbody rb;
@@ -146,7 +148,7 @@ public class PlayerAgent : Agent
         rb.AddForce(dirToGo * moveSpeed, ForceMode.VelocityChange);
 
         rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed);
-        // AddReward(1 / envController.maxEnvironmentSteps * -0.5f);
+        AddReward(1 / envController.maxEnvironmentSteps * -0.5f);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -200,9 +202,9 @@ public class PlayerAgent : Agent
         }
     }
 
-    public void setActivity(bool isActive)
+    public void setActivity(bool isActive, BehaviorType behaviorType = BehaviorType.Default)
     {
         rb.useGravity = isActive;
-        behaviorParameters.BehaviorType = isActive ? BehaviorType.Default : BehaviorType.HeuristicOnly;
+        behaviorParameters.BehaviorType = behaviorType;
     }
 }

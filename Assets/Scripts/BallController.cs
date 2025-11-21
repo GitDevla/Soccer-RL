@@ -1,8 +1,8 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class BallController : MonoBehaviour
 {
-    public GameObject area;
     [HideInInspector]
     public SoccerEnv envController;
     private Rigidbody rb;
@@ -12,7 +12,6 @@ public class BallController : MonoBehaviour
 
     void Start()
     {
-        envController = area.GetComponent<SoccerEnv>();
         rb = GetComponent<Rigidbody>();
         startPosition = transform.localPosition;
     }
@@ -32,13 +31,9 @@ public class BallController : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("RedGoal"))
-        {
             envController.GoalScored(Team.Blue);
-        }
         else if (other.gameObject.CompareTag("BlueGoal"))
-        {
             envController.GoalScored(Team.Red);
-        }
     }
 
     void FixedUpdate()
@@ -50,12 +45,8 @@ public class BallController : MonoBehaviour
             return;
 
         if (Vector3.Dot(rb.velocity, (BlueTeamGoal - transform.position).normalized) > 0)
-        {
             envController.GiveRewardToTeam(Team.Red, 0.001f);
-        }
         else if (Vector3.Dot(rb.velocity, (RedTeamGoal - transform.position).normalized) > 0)
-        {
             envController.GiveRewardToTeam(Team.Blue, 0.001f);
-        }
     }
 }
