@@ -74,30 +74,35 @@ public class PlayerAgent : Agent
 
         var observation = GetObservations();
         var y = transform.position.y;
-        Gizmos.color = Color.yellow;
+        // Positions
         var relativeBallPos = new Vector3(observation[0], observation[1], observation[2]);
+        Gizmos.color = Color.yellow;
         Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeBallPos));
-        var relativeOpponentPos = new Vector3(observation[3], y, observation[4]);
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeOpponentPos));
 
-        var relativeOpponentGoalDir = new Vector3(observation[5], y, observation[6]);
+        // Goal Directions
+        var relativeOpponentGoalDir = new Vector3(observation[3], y, observation[4]);
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeOpponentGoalDir));
-        var relativeOwnGoalDir = new Vector3(observation[7], y, observation[8]);
+        var relativeOwnGoalDir = new Vector3(observation[5], y, observation[6]);
         Gizmos.color = Color.green;
         Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeOwnGoalDir));
 
-        var relativeVelocity = new Vector3(observation[9], y, observation[10]);
+        // Velocities
+        var relativeVelocity = new Vector3(observation[7], y, observation[8]);
         Gizmos.color = Color.magenta;
         Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeVelocity));
-        var relativeBallVelocity = new Vector3(observation[11], observation[12], observation[13]);
+        var relativeBallVelocity = new Vector3(observation[9], observation[10], observation[11]);
         Gizmos.color = Color.white;
         Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeBallVelocity));
-        var relativeOpponentVelocity = new Vector3(observation[14], y, observation[15]);
+
+        // Orientation 2 skipped
+
+        var relativeOpponentPos = new Vector3(observation[14], y, observation[15]);
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeOpponentPos));
+        var relativeOpponentVelocity = new Vector3(observation[16], y, observation[17]);
         Gizmos.color = Color.gray;
         Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeOpponentVelocity));
-
     }
 
     private static Vector2 Vector3ToVector2(Vector3 vec3)
@@ -107,7 +112,7 @@ public class PlayerAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // Positions (5 values)
+        // Position (3 values)
         sensor.AddObservation(transform.InverseTransformPoint(ball.position));
 
         // Goal directions (4 values)
@@ -118,12 +123,12 @@ public class PlayerAgent : Agent
         sensor.AddObservation(Vector3ToVector2(transform.InverseTransformDirection(rb.velocity)));
         sensor.AddObservation(transform.InverseTransformDirection(ball.GetComponent<Rigidbody>().velocity));
 
-        // Orientation (1 values)
+        // Orientation (2 values)
         sensor.AddObservation(transform.rotation[1]);
         sensor.AddObservation(transform.rotation[3]);
 
 
-
+        // Opponent info (4 values)
         if (seeOpponent)
         {
             sensor.AddObservation(Vector3ToVector2(transform.InverseTransformPoint(opponent.position)));
