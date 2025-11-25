@@ -59,8 +59,7 @@ public class SoccerEnv : MonoBehaviour
     public void ResetScene()
     {
         ball.ResetBall();
-        // var currentLearningDifficulty = Academy.Instance.EnvironmentParameters.GetWithDefault("difficulty", (int)LearningDifficulty.Easy);
-        var currentLearningDifficulty = (int)LearningDifficulty.SelfPlay;
+        var currentLearningDifficulty = Academy.Instance.EnvironmentParameters.GetWithDefault("difficulty", (int)LearningDifficulty.SelfPlay);
         if (currentLearningDifficulty == (int)LearningDifficulty.Medium)
         {
             var randomPos = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
@@ -112,10 +111,6 @@ public class SoccerEnv : MonoBehaviour
 
     public void GiveRewardToTeam(Team team, float reward)
     {
-        // var currentLearningDifficulty = Academy.Instance.EnvironmentParameters.GetWithDefault("difficulty", (int)LearningDifficulty.SelfPlay);
-        var currentLearningDifficulty = (int)LearningDifficulty.SelfPlay;
-        if (currentLearningDifficulty >= (int)LearningDifficulty.SelfPlayTransition)
-            return;
         if (team == Team.Red)
         {
             redPlayerAgent.AddReward(reward);
