@@ -36,6 +36,16 @@ public class BallController : MonoBehaviour
             envController.GoalScored(Team.Red);
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            Vector3 normal = collision.contacts[0].normal;
+            Vector3 bounce = Vector3.Reflect(rb.velocity, normal);
+            rb.velocity = bounce * 1.2f;
+        }
+    }
+
     void FixedUpdate()
     {
         var BlueTeamGoal = envController.blueGoal.transform.position;
