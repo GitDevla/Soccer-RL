@@ -51,8 +51,9 @@ public class BallController : MonoBehaviour
         var BlueTeamGoal = envController.blueGoal.transform.position;
         var RedTeamGoal = envController.redGoal.transform.position;
 
-        if (rb.velocity.magnitude < 1f)
+        if (new Vector2(rb.velocity.x, rb.velocity.z).magnitude < 1f)
             return;
+
 
         if (Vector3.Dot(rb.velocity, (BlueTeamGoal - transform.position).normalized) > 0)
             envController.GiveRewardToTeam(Team.Red, 0.001f);
