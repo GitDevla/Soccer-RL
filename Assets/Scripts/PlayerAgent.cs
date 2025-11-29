@@ -184,27 +184,7 @@ public class PlayerAgent : Agent
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ball"))
-            OnBallTouch(collision);
-    }
-
-    private void OnBallTouch(Collision collision)
-    {
-        Rigidbody ballRb = collision.gameObject.GetComponent<Rigidbody>();
-        Vector3 kickDirection = (collision.transform.position - transform.position).normalized;
-
-        float dotProduct = Vector3.Dot(transform.forward, kickDirection);
-
-        if (dotProduct > 0.5f) // 0.5 ~= 60 degrees
-        {
-            float currentSpeed = rb.velocity.magnitude;
-            float adjustedKickForce = kickForce + currentSpeed;
-            ballRb.AddForce(kickDirection * adjustedKickForce, ForceMode.VelocityChange);
-            envController.GiveRewardToTeam(myTeam, 0.1f);
-        }
-        else
-        {
             envController.GiveRewardToTeam(myTeam, 0.03f);
-        }
     }
 
     public void setActivity(bool isActive, BehaviorType behaviorType = BehaviorType.Default)
