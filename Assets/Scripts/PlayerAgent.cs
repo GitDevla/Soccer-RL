@@ -38,7 +38,7 @@ public class PlayerAgent : Agent
     [HideInInspector] public SoccerEnv envController;
 
     [HideInInspector] private readonly float moveSpeed = 0.1f;
-    [HideInInspector] private readonly float turnSpeed = 3f;
+    [HideInInspector] private readonly float turnSpeed = 150f;
     [HideInInspector] private readonly float kickForce = 1f;
     [HideInInspector] private readonly float maxSpeed = 5f;
 
@@ -124,8 +124,8 @@ public class PlayerAgent : Agent
         sensor.AddObservation(transform.InverseTransformDirection(ball.GetComponent<Rigidbody>().velocity));
 
         // Orientation (2 values)
-        sensor.AddObservation(transform.rotation[1]);
-        sensor.AddObservation(transform.rotation[3]);
+        Vector2 forward2D = Vector3ToVector2(transform.forward);
+        sensor.AddObservation(forward2D);
 
 
         // Opponent info (4 values)
@@ -144,7 +144,7 @@ public class PlayerAgent : Agent
     public override void OnActionReceived(ActionBuffers actions)
     {
         var rotateDir = Vector3.up * actions.DiscreteActions[2];
-        transform.Rotate(rotateDir, turnSpeed);
+        transform.Rotate(rotateDir, turnSpeed * Time.fixedDeltaTime);
 
         var dirToGo = Vector3.zero;
         dirToGo += transform.forward * actions.DiscreteActions[0];
