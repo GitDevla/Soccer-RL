@@ -6,23 +6,23 @@ using Unity.MLAgents.Policies;
 
 enum ForwardMovement
 {
-    None = 0,
-    Forward = 1,
-    Backward = -1
+    None,
+    Forward,
+    Backward
 }
 
 enum SideMovement
 {
-    None = 0,
-    Right = 1,
-    Left = -1
+    None,
+    Right,
+    Left
 }
 
 enum RotationMovement
 {
-    None = 0,
-    RotateRight = 1,
-    RotateLeft = -1
+    None,
+    RotateRight,
+    RotateLeft
 }
 
 [RequireComponent(typeof(Rigidbody))]
@@ -143,17 +143,42 @@ public class PlayerAgent : Agent
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        var rotateDir = Vector3.up * actions.DiscreteActions[2];
-        transform.Rotate(rotateDir, turnSpeed * Time.fixedDeltaTime);
+        switch (actions.DiscreteActions[2])
+        {
+            case (int)RotationMovement.RotateLeft:
+                transform.Rotate(-Vector3.up, turnSpeed * Time.fixedDeltaTime);
+                break;
+            case (int)RotationMovement.RotateRight:
+                transform.Rotate(Vector3.up, turnSpeed * Time.fixedDeltaTime);
+                break;
+        }
 
         var dirToGo = Vector3.zero;
-        dirToGo += transform.forward * actions.DiscreteActions[0];
-        dirToGo += transform.right * actions.DiscreteActions[1];
+
+        switch (actions.DiscreteActions[0])
+        {
+            case (int)ForwardMovement.Forward:
+                dirToGo += transform.forward;
+                break;
+            case (int)ForwardMovement.Backward:
+                dirToGo += -transform.forward;
+                break;
+        }
+        switch (actions.DiscreteActions[1])
+        {
+            case (int)SideMovement.Right:
+                dirToGo += transform.right;
+                break;
+            case (int)SideMovement.Left:
+                dirToGo += -transform.right;
+                break;
+        }
+
         dirToGo = dirToGo.normalized;
         rb.AddForce(dirToGo * moveSpeed, ForceMode.VelocityChange);
 
         rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed);
-        AddReward(1 / envController.maxEnvironmentSteps * -0.5f);
+        AddReward(1 / envController.maxEnvironmentSteps);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
