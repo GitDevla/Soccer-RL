@@ -10,6 +10,7 @@ public enum Team
 
 enum LearningDifficulty
 {
+    QuickLose = -1,
     Easy = 0,
     Medium = 1,
     Hard = 2,
@@ -41,6 +42,8 @@ public class SoccerEnv : MonoBehaviour
         redPlayerAgent.opponent = bluePlayerAgent.transform;
         redPlayerAgent.ownGoal = redGoal.transform;
         redPlayerAgent.opponentGoal = blueGoal.transform;
+        redPlayerAgent.opponentRb = bluePlayerAgent.GetComponent<Rigidbody>();
+        redPlayerAgent.ballRb = ball.GetComponent<Rigidbody>();
         redPlayerAgent.myTeam = Team.Red;
 
         // Blue Player
@@ -49,6 +52,8 @@ public class SoccerEnv : MonoBehaviour
         bluePlayerAgent.opponent = redPlayerAgent.transform;
         bluePlayerAgent.ownGoal = blueGoal.transform;
         bluePlayerAgent.opponentGoal = redGoal.transform;
+        bluePlayerAgent.opponentRb = redPlayerAgent.GetComponent<Rigidbody>();
+        bluePlayerAgent.ballRb = ball.GetComponent<Rigidbody>();
         bluePlayerAgent.myTeam = Team.Blue;
 
         ball.envController = this;
@@ -60,6 +65,12 @@ public class SoccerEnv : MonoBehaviour
     {
         ball.ResetBall();
         var currentLearningDifficulty = Academy.Instance.EnvironmentParameters.GetWithDefault("difficulty", (int)LearningDifficulty.SelfPlay);
+        maxEnvironmentSteps = 2000;
+
+        if (currentLearningDifficulty == (int)LearningDifficulty.QuickLose)
+        {
+            ball.AddForce(new Vector3(0, 0, -2f));
+        }
         if (currentLearningDifficulty == (int)LearningDifficulty.Medium)
         {
             var randomPos = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
@@ -80,27 +91,29 @@ public class SoccerEnv : MonoBehaviour
             ball.AddForce(randomVelocity.normalized * 1f);
             var playerRandomPosZ = Random.Range(0, 4f);
             var playerRandomPosX = Random.Range(-1, 1f);
-            redPlayerAgent.transform.position += new Vector3(playerRandomPosX, 0, playerRandomPosZ);
+            bluePlayerAgent.transform.position += new Vector3(playerRandomPosX, 0, playerRandomPosZ);
             var playerRandomRotation = Random.Range(0, 360);
-            redPlayerAgent.transform.localRotation = Quaternion.Euler(0, playerRandomRotation, 0);
+            bluePlayerAgent.transform.localRotation = Quaternion.Euler(0, playerRandomRotation, 0);
         }
         else if (currentLearningDifficulty == (int)LearningDifficulty.SelfPlayTransition)
         {
             redPlayerAgent.transform.position += new Vector3(0, -2, 0);
-            redPlayerAgent.setActivity(true, BehaviorType.InferenceOnly);
+            redPlayerAgent.SetActivity(true, BehaviorType.InferenceOnly);
             bluePlayerAgent.seeOpponent = true;
+            maxEnvironmentSteps = 10000;
         }
         else if (currentLearningDifficulty == (int)LearningDifficulty.SelfPlay)
         {
             redPlayerAgent.transform.position += new Vector3(0, -2, 0);
-            redPlayerAgent.setActivity(true, BehaviorType.Default);
+            redPlayerAgent.SetActivity(true, BehaviorType.Default);
             redPlayerAgent.seeOpponent = true;
             bluePlayerAgent.seeOpponent = true;
+            maxEnvironmentSteps = 10000;
         }
         resetTimer = 0;
     }
 
-    private void EndEpisode(float redReward, float blueReward)
+    public void EndEpisode(float redReward, float blueReward)
     {
         redPlayerAgent.AddReward(redReward);
         bluePlayerAgent.AddReward(blueReward);
@@ -128,8 +141,8 @@ public class SoccerEnv : MonoBehaviour
         resetTimer++;
         if (resetTimer >= maxEnvironmentSteps)
         {
-            bluePlayerAgent.EpisodeInterrupted();
-            redPlayerAgent.EpisodeInterrupted();
+            bluePlayerAgent.EndEpisode();
+            redPlayerAgent.EndEpisode();
             ResetScene();
         }
     }
@@ -137,8 +150,8 @@ public class SoccerEnv : MonoBehaviour
     public void GoalScored(Team scoringTeam)
     {
         if (scoringTeam == Team.Red)
-            EndEpisode(1, -1);
+            EndEpisode(1 - (float)resetTimer / maxEnvironmentSteps, -1);
         else if (scoringTeam == Team.Blue)
-            EndEpisode(-1, 1);
+            EndEpisode(-1, 1 - (float)resetTimer / maxEnvironmentSteps);
     }
 }

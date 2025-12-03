@@ -46,10 +46,19 @@ public class PlayerAgent : Agent
     [HideInInspector] public Transform opponent;
     [HideInInspector] public Transform ownGoal;
     [HideInInspector] public Transform opponentGoal;
+    public Rigidbody ballRb;
+    public Rigidbody opponentRb;
 
     [HideInInspector]
     private BehaviorParameters behaviorParameters;
     public bool seeOpponent = false;
+
+    private const float MAX_DISTANCE = 6f;
+    private const float MAX_AGENT_SPEED = 5f;
+    private const float MAX_BALL_SPEED = 20f;
+
+    private int goodBallTouches = 0;
+    private int badBallTouches = 0;
 
     private void Start()
     {
@@ -65,44 +74,8 @@ public class PlayerAgent : Agent
         rb.angularVelocity = Vector3.zero;
         transform.position = startPosition;
         transform.eulerAngles = initialRotation;
-    }
-
-    void OnDrawGizmos()
-    {
-        if (!Application.isPlaying)
-            return;
-
-        var observation = GetObservations();
-        var y = transform.position.y;
-        // Positions
-        var relativeBallPos = new Vector3(observation[0], observation[1], observation[2]);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeBallPos));
-
-        // Goal Directions
-        var relativeOpponentGoalDir = new Vector3(observation[3], y, observation[4]);
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeOpponentGoalDir));
-        var relativeOwnGoalDir = new Vector3(observation[5], y, observation[6]);
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeOwnGoalDir));
-
-        // Velocities
-        var relativeVelocity = new Vector3(observation[7], y, observation[8]);
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeVelocity));
-        var relativeBallVelocity = new Vector3(observation[9], observation[10], observation[11]);
-        Gizmos.color = Color.white;
-        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeBallVelocity));
-
-        // Orientation 2 skipped
-
-        var relativeOpponentPos = new Vector3(observation[14], y, observation[15]);
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeOpponentPos));
-        var relativeOpponentVelocity = new Vector3(observation[16], y, observation[17]);
-        Gizmos.color = Color.gray;
-        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(relativeOpponentVelocity));
+        goodBallTouches = 0;
+        badBallTouches = 0;
     }
 
     private static Vector2 Vector3ToVector2(Vector3 vec3)
@@ -112,27 +85,24 @@ public class PlayerAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // Position (3 values)
-        sensor.AddObservation(transform.InverseTransformPoint(ball.position));
+        Vector3 ballDir = ball.position - transform.position;
+        sensor.AddObservation(transform.InverseTransformDirection(ballDir) / MAX_DISTANCE);
 
-        // Goal directions (4 values)
-        sensor.AddObservation(Vector3ToVector2(transform.InverseTransformDirection(opponentGoal.position - transform.position)));
-        sensor.AddObservation(Vector3ToVector2(transform.InverseTransformDirection(ownGoal.position - transform.position)));
+        Vector3 opponentGoalDir = opponentGoal.position - transform.position;
+        Vector3 ownGoalDir = ownGoal.position - transform.position;
+        sensor.AddObservation(Vector3ToVector2(transform.InverseTransformDirection(opponentGoalDir)) / MAX_DISTANCE);
+        sensor.AddObservation(Vector3ToVector2(transform.InverseTransformDirection(ownGoalDir)) / MAX_DISTANCE);
 
-        // Velocities (7 values)
-        sensor.AddObservation(Vector3ToVector2(transform.InverseTransformDirection(rb.velocity)));
-        sensor.AddObservation(transform.InverseTransformDirection(ball.GetComponent<Rigidbody>().velocity));
+        sensor.AddObservation(Vector3ToVector2(transform.InverseTransformDirection(rb.velocity)) / MAX_AGENT_SPEED);
+        sensor.AddObservation(transform.InverseTransformDirection(ballRb.velocity) / MAX_BALL_SPEED);
 
-        // Orientation (2 values)
-        Vector2 forward2D = Vector3ToVector2(transform.forward);
-        sensor.AddObservation(forward2D);
+        sensor.AddObservation((transform.rotation.eulerAngles.y - (myTeam == Team.Red ? 180f : 0f)) / 360.0f);
 
-
-        // Opponent info (4 values)
-        if (seeOpponent)
+        if (seeOpponent && opponent != null)
         {
-            sensor.AddObservation(Vector3ToVector2(transform.InverseTransformPoint(opponent.position)));
-            sensor.AddObservation(Vector3ToVector2(transform.InverseTransformDirection(opponent.GetComponent<Rigidbody>().velocity)));
+            Vector3 opponentDir = opponent.position - transform.position;
+            sensor.AddObservation(Vector3ToVector2(transform.InverseTransformDirection(opponentDir)) / MAX_DISTANCE);
+            sensor.AddObservation(Vector3ToVector2(transform.InverseTransformDirection(opponentRb.velocity)) / MAX_AGENT_SPEED * 2);
         }
         else
         {
@@ -178,7 +148,7 @@ public class PlayerAgent : Agent
         rb.AddForce(dirToGo * moveSpeed, ForceMode.VelocityChange);
 
         rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed);
-        AddReward(1 / envController.maxEnvironmentSteps);
+        AddReward(-1f / envController.maxEnvironmentSteps);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -209,10 +179,33 @@ public class PlayerAgent : Agent
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ball"))
-            envController.GiveRewardToTeam(myTeam, 0.03f);
+            OnBallTouch(collision);
     }
 
-    public void setActivity(bool isActive, BehaviorType behaviorType = BehaviorType.Default)
+    private void OnBallTouch(Collision collision)
+    {
+        Rigidbody ballRb = collision.gameObject.GetComponent<Rigidbody>();
+        Vector3 kickDirection = (collision.transform.position - transform.position).normalized;
+
+        float dotProduct = Vector3.Dot(transform.forward, kickDirection);
+
+        if (dotProduct > 0.5f) // 0.5 ~= 60 degrees
+        {
+            float currentSpeed = rb.velocity.magnitude;
+            float adjustedKickForce = kickForce + currentSpeed;
+            ballRb.AddForce(kickDirection * adjustedKickForce, ForceMode.VelocityChange);
+            envController.GiveRewardToTeam(myTeam, 0.4f * Mathf.Pow(0.9f, goodBallTouches));
+            goodBallTouches += 1;
+        }
+        else
+        {
+            envController.GiveRewardToTeam(myTeam, 0.1f * Mathf.Pow(0.9f, badBallTouches));
+            badBallTouches += 1;
+        }
+    }
+
+
+    public void SetActivity(bool isActive, BehaviorType behaviorType = BehaviorType.Default)
     {
         rb.useGravity = isActive;
         behaviorParameters.BehaviorType = behaviorType;
