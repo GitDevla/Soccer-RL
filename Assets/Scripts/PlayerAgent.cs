@@ -53,12 +53,11 @@ public class PlayerAgent : Agent
     private BehaviorParameters behaviorParameters;
     public bool seeOpponent = false;
 
-    private const float MAX_DISTANCE = 6f;
+    private const float MAX_DISTANCE = 5f;
     private const float MAX_AGENT_SPEED = 5f;
     private const float MAX_BALL_SPEED = 20f;
 
     private int goodBallTouches = 0;
-    private int badBallTouches = 0;
 
     private void Start()
     {
@@ -75,7 +74,6 @@ public class PlayerAgent : Agent
         transform.position = startPosition;
         transform.eulerAngles = initialRotation;
         goodBallTouches = 0;
-        badBallTouches = 0;
     }
 
     private static Vector2 Vector3ToVector2(Vector3 vec3)
@@ -94,9 +92,10 @@ public class PlayerAgent : Agent
         sensor.AddObservation(Vector3ToVector2(transform.InverseTransformDirection(ownGoalDir)) / MAX_DISTANCE);
 
         sensor.AddObservation(Vector3ToVector2(transform.InverseTransformDirection(rb.velocity)) / MAX_AGENT_SPEED);
-        sensor.AddObservation(transform.InverseTransformDirection(ballRb.velocity) / MAX_BALL_SPEED);
+        sensor.AddObservation(transform.InverseTransformDirection(ballRb.velocity) / (MAX_BALL_SPEED + MAX_AGENT_SPEED));
 
-        sensor.AddObservation((transform.rotation.eulerAngles.y - (myTeam == Team.Red ? 180f : 0f)) / 360.0f);
+        float deltaAngle = Mathf.DeltaAngle(initialRotation.y, transform.rotation.eulerAngles.y);
+        sensor.AddObservation(deltaAngle / 180f);
 
         if (seeOpponent && opponent != null)
         {
@@ -194,13 +193,11 @@ public class PlayerAgent : Agent
             float currentSpeed = rb.velocity.magnitude;
             float adjustedKickForce = kickForce + currentSpeed;
             ballRb.AddForce(kickDirection * adjustedKickForce, ForceMode.VelocityChange);
-            envController.GiveRewardToTeam(myTeam, 0.4f * Mathf.Pow(0.9f, goodBallTouches));
-            goodBallTouches += 1;
-        }
-        else
-        {
-            envController.GiveRewardToTeam(myTeam, 0.1f * Mathf.Pow(0.9f, badBallTouches));
-            badBallTouches += 1;
+            if (Vector3.Dot(ballRb.velocity.normalized, (opponentGoal.position - ballRb.position).normalized) > 0)
+            {
+                envController.GiveRewardToTeam(myTeam, 0.2f * Mathf.Pow(0.8f, goodBallTouches));
+                goodBallTouches += 1;
+            }
         }
     }
 
