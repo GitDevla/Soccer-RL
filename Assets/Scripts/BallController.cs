@@ -8,6 +8,7 @@ public class BallController : MonoBehaviour
     private Rigidbody rb;
 
     private Vector3 startPosition;
+    private static readonly float maxBallSpeed = 20f;
 
 
     void Start()
@@ -48,6 +49,8 @@ public class BallController : MonoBehaviour
 
     void FixedUpdate()
     {
+        rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxBallSpeed);
+
         var BlueTeamGoal = envController.blueGoal.transform.position;
         var RedTeamGoal = envController.redGoal.transform.position;
 
