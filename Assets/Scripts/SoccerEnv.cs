@@ -30,6 +30,9 @@ public class SoccerEnv : MonoBehaviour
 
 
     public int maxEnvironmentSteps = 2000;
+    public float kickReward = 0.4f;
+    public float possessionReward = 0.003f;
+    public float goalReward = 1.0f;
     private int resetTimer;
 
     void Start()
@@ -67,10 +70,6 @@ public class SoccerEnv : MonoBehaviour
         var currentLearningDifficulty = Academy.Instance.EnvironmentParameters.GetWithDefault("difficulty", (int)LearningDifficulty.SelfPlay);
         maxEnvironmentSteps = 2000;
 
-        if (currentLearningDifficulty == (int)LearningDifficulty.QuickLose)
-        {
-            ball.AddForce(new Vector3(0, 0, -2f));
-        }
         if (currentLearningDifficulty == (int)LearningDifficulty.Medium)
         {
             var randomPos = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
@@ -82,6 +81,8 @@ public class SoccerEnv : MonoBehaviour
             var randomVelocity = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
             ball.transform.position += randomPos;
             ball.AddForce(randomVelocity.normalized * 2f);
+            kickReward = 0.2f;
+            possessionReward = 0.002f;
         }
         else if (currentLearningDifficulty == (int)LearningDifficulty.Extreme)
         {
@@ -94,6 +95,8 @@ public class SoccerEnv : MonoBehaviour
             bluePlayerAgent.transform.position += new Vector3(playerRandomPosX, 0, playerRandomPosZ);
             var playerRandomRotation = Random.Range(0, 360);
             bluePlayerAgent.transform.localRotation = Quaternion.Euler(0, playerRandomRotation, 0);
+            kickReward = 0.2f;
+            possessionReward = 0.002f;
         }
         else if (currentLearningDifficulty == (int)LearningDifficulty.SelfPlayTransition)
         {
@@ -101,6 +104,8 @@ public class SoccerEnv : MonoBehaviour
             redPlayerAgent.SetActivity(true, BehaviorType.InferenceOnly);
             bluePlayerAgent.seeOpponent = true;
             maxEnvironmentSteps = 10000;
+            kickReward = 0.1f;
+            possessionReward = 0.001f;
         }
         else if (currentLearningDifficulty == (int)LearningDifficulty.SelfPlay)
         {
@@ -109,6 +114,8 @@ public class SoccerEnv : MonoBehaviour
             redPlayerAgent.seeOpponent = true;
             bluePlayerAgent.seeOpponent = true;
             maxEnvironmentSteps = 10000;
+            kickReward = 0.0f;
+            possessionReward = 0.0f;
         }
         resetTimer = 0;
     }
@@ -150,8 +157,8 @@ public class SoccerEnv : MonoBehaviour
     public void GoalScored(Team scoringTeam)
     {
         if (scoringTeam == Team.Red)
-            EndEpisode(1 - (float)resetTimer / maxEnvironmentSteps, -1);
+            EndEpisode(goalReward - (float)resetTimer / maxEnvironmentSteps, -goalReward);
         else if (scoringTeam == Team.Blue)
-            EndEpisode(-1, 1 - (float)resetTimer / maxEnvironmentSteps);
+            EndEpisode(-goalReward, goalReward - (float)resetTimer / maxEnvironmentSteps);
     }
 }

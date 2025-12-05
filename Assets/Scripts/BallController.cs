@@ -59,8 +59,8 @@ public class BallController : MonoBehaviour
 
 
         if (Vector3.Dot(rb.velocity, (BlueTeamGoal - transform.position).normalized) > 0)
-            envController.GiveRewardToTeam(Team.Red, 0.001f);
+            envController.GiveRewardToTeam(Team.Red, envController.possessionReward);
         else if (Vector3.Dot(rb.velocity, (RedTeamGoal - transform.position).normalized) > 0)
-            envController.GiveRewardToTeam(Team.Blue, 0.001f);
+            envController.GiveRewardToTeam(Team.Blue, envController.possessionReward);
     }
 }

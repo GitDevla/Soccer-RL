@@ -195,7 +195,7 @@ public class PlayerAgent : Agent
             ballRb.AddForce(kickDirection * adjustedKickForce, ForceMode.VelocityChange);
             if (Vector3.Dot(ballRb.velocity.normalized, (opponentGoal.position - ballRb.position).normalized) > 0)
             {
-                envController.GiveRewardToTeam(myTeam, 0.2f * Mathf.Pow(0.8f, goodBallTouches));
+                envController.GiveRewardToTeam(myTeam, envController.kickReward * Mathf.Pow(0.8f, goodBallTouches));
                 goodBallTouches += 1;
             }
         }
