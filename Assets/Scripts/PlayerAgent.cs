@@ -76,6 +76,49 @@ public class PlayerAgent : Agent
         goodBallTouches = 0;
     }
 
+    private void OnDrawGizmos()
+    {
+        var observations = GetObservations();
+
+        if (observations.Count == 0)
+            return;
+
+        var ballDir = new Vector3(observations[0], observations[1], observations[2]) * MAX_DISTANCE;
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(ballDir));
+
+        var opponentGoalDir = new Vector3(observations[3], 0, observations[4]) * MAX_DISTANCE;
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(opponentGoalDir));
+
+        var ownGoalDir = new Vector3(observations[5], 0, observations[6]) * MAX_DISTANCE;
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(ownGoalDir));
+
+        var agentVelocity = new Vector3(observations[7], 0, observations[8]) * MAX_AGENT_SPEED;
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(agentVelocity));
+
+        var ballVelocity = new Vector3(observations[9], observations[10], observations[11]) * (MAX_BALL_SPEED + MAX_AGENT_SPEED);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(ballVelocity));
+
+        var deltaAngle = observations[12] * 180f;
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(transform.position, transform.position + Quaternion.Euler(0, deltaAngle, 0) * transform.forward);
+
+        if (seeOpponent && opponent != null)
+        {
+            var opponentDir = new Vector3(observations[13], 0, observations[14]) * MAX_DISTANCE;
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(opponentDir));
+
+            var opponentVelocity = new Vector3(observations[15], 0, observations[16]) * MAX_AGENT_SPEED * 2;
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(opponentVelocity));
+        }
+    }
+
     private static Vector2 Vector3ToVector2(Vector3 vec3)
     {
         return new Vector2(vec3.x, vec3.z);
