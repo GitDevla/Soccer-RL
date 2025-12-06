@@ -130,17 +130,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 687011708833358157, guid: 82ffdf70ab28d924cbe94a55ff636191, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 687011708833358157, guid: 82ffdf70ab28d924cbe94a55ff636191, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2
+      objectReference: {fileID: 0}
     - target: {fileID: 3036553183301133211, guid: 82ffdf70ab28d924cbe94a55ff636191, type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: 956feb05f062b42438f7ddec987a1e01, type: 3}
+      objectReference: {fileID: 5022602860645237092, guid: b616def060aa73a4f91c8e0296d20433, type: 3}
     - target: {fileID: 3036553183301133211, guid: 82ffdf70ab28d924cbe94a55ff636191, type: 3}
       propertyPath: m_BehaviorType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3036553183301133211, guid: 82ffdf70ab28d924cbe94a55ff636191, type: 3}
-      propertyPath: m_BrainParameters.VectorObservationSize
-      value: 18
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3251497404824661703, guid: 82ffdf70ab28d924cbe94a55ff636191, type: 3}
       propertyPath: m_Name
@@ -186,13 +190,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5254192847908151964, guid: 82ffdf70ab28d924cbe94a55ff636191, type: 3}
+      propertyPath: DecisionPeriod
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7480830413949567852, guid: 82ffdf70ab28d924cbe94a55ff636191, type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: c6a9d0059fcbddb4a984b8f421f2bc52, type: 3}
+      objectReference: {fileID: 5022602860645237092, guid: ea48f4a16e8399d4e9bd7d1124046ae0, type: 3}
     - target: {fileID: 7480830413949567852, guid: 82ffdf70ab28d924cbe94a55ff636191, type: 3}
-      propertyPath: m_BrainParameters.VectorObservationSize
-      value: 18
+      propertyPath: m_BehaviorType
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -352,7 +360,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 65
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
