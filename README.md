@@ -15,7 +15,7 @@ A reinforcement learning agent designed to play a simplified version of soccer i
 - `+1 - (step/maxStep)` for scoring a goal
 - `-1` for conceding a goal
 - `-1/maxStep` for each time step to encourage faster play
-- `+kickReward` for kicking the ball towards the opponent's goal, where `kickReward` changes based on the curriculum level
+- `+kickReward*0.8^n` for kicking the ball towards the opponent's goal, where `kickReward` changes based on the curriculum level and `n` is the number of kicks in the episode
 - `+possessionReward` for the ball rolling towards the opponent's goal, where `possessionReward` changes based on the curriculum level
 - `-possessionReward` for the ball rolling towards own goal, where `possessionReward` changes based on the curriculum level
 
