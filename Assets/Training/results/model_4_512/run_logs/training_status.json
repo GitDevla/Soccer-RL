@@ -1,0 +1,69 @@
+{
+    "difficulty": {
+        "lesson_num": 5
+    },
+    "Player": {
+        "checkpoints": [
+            {
+                "steps": 58499873,
+                "file_path": "results\\model_4_512\\Player\\Player-58499873.onnx",
+                "reward": null,
+                "creation_time": 1765030882.3160658,
+                "auxillary_file_paths": [
+                    "results\\model_4_512\\Player\\Player-58499873.pt"
+                ]
+            },
+            {
+                "steps": 58999920,
+                "file_path": "results\\model_4_512\\Player\\Player-58999920.onnx",
+                "reward": -0.11358822443905998,
+                "creation_time": 1765031331.7389822,
+                "auxillary_file_paths": [
+                    "results\\model_4_512\\Player\\Player-58999920.pt"
+                ]
+            },
+            {
+                "steps": 59499971,
+                "file_path": "results\\model_4_512\\Player\\Player-59499971.onnx",
+                "reward": -0.29489332834879556,
+                "creation_time": 1765031789.2839875,
+                "auxillary_file_paths": [
+                    "results\\model_4_512\\Player\\Player-59499971.pt"
+                ]
+            },
+            {
+                "steps": 59999973,
+                "file_path": "results\\model_4_512\\Player\\Player-59999973.onnx",
+                "reward": 0.05208998620510101,
+                "creation_time": 1765032249.28731,
+                "auxillary_file_paths": [
+                    "results\\model_4_512\\Player\\Player-59999973.pt"
+                ]
+            },
+            {
+                "steps": 60332405,
+                "file_path": "results\\model_4_512\\Player\\Player-60332405.onnx",
+                "reward": null,
+                "creation_time": 1765032556.3468075,
+                "auxillary_file_paths": [
+                    "results\\model_4_512\\Player\\Player-60332405.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 60332405,
+            "file_path": "results\\model_4_512\\Player.onnx",
+            "reward": null,
+            "creation_time": 1765032556.3468075,
+            "auxillary_file_paths": [
+                "results\\model_4_512\\Player\\Player-60332405.pt"
+            ]
+        },
+        "elo": 884.5753779211753
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

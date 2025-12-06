@@ -1,0 +1,68 @@
+{
+    "difficulty": {
+        "lesson_num": 0
+    },
+    "Player": {
+        "checkpoints": [
+            {
+                "steps": 499765,
+                "file_path": "results\\batch_2048\\Player\\Player-499765.onnx",
+                "reward": -1.0084231816805327,
+                "creation_time": 1764875870.0253568,
+                "auxillary_file_paths": [
+                    "results\\batch_2048\\Player\\Player-499765.pt"
+                ]
+            },
+            {
+                "steps": 999746,
+                "file_path": "results\\batch_2048\\Player\\Player-999746.onnx",
+                "reward": -1.154625043272972,
+                "creation_time": 1764876113.6947286,
+                "auxillary_file_paths": [
+                    "results\\batch_2048\\Player\\Player-999746.pt"
+                ]
+            },
+            {
+                "steps": 1499517,
+                "file_path": "results\\batch_2048\\Player\\Player-1499517.onnx",
+                "reward": -0.5490385248110845,
+                "creation_time": 1764876364.8542068,
+                "auxillary_file_paths": [
+                    "results\\batch_2048\\Player\\Player-1499517.pt"
+                ]
+            },
+            {
+                "steps": 1999965,
+                "file_path": "results\\batch_2048\\Player\\Player-1999965.onnx",
+                "reward": -0.2675556192795436,
+                "creation_time": 1764876621.759931,
+                "auxillary_file_paths": [
+                    "results\\batch_2048\\Player\\Player-1999965.pt"
+                ]
+            },
+            {
+                "steps": 2303641,
+                "file_path": "results\\batch_2048\\Player\\Player-2303641.onnx",
+                "reward": null,
+                "creation_time": 1764876788.2201946,
+                "auxillary_file_paths": [
+                    "results\\batch_2048\\Player\\Player-2303641.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 2303641,
+            "file_path": "results\\batch_2048\\Player.onnx",
+            "reward": null,
+            "creation_time": 1764876788.2201946,
+            "auxillary_file_paths": [
+                "results\\batch_2048\\Player\\Player-2303641.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "difficulty": {
+        "lesson_num": 1
+    },
+    "Player": {
+        "checkpoints": [
+            {
+                "steps": 999905,
+                "file_path": "results\\model_3_512\\Player\\Player-999905.onnx",
+                "reward": -0.852000097433726,
+                "creation_time": 1764881630.4872196,
+                "auxillary_file_paths": [
+                    "results\\model_3_512\\Player\\Player-999905.pt"
+                ]
+            },
+            {
+                "steps": 1499731,
+                "file_path": "results\\model_3_512\\Player\\Player-1499731.onnx",
+                "reward": 0.08228565965379987,
+                "creation_time": 1764881917.3073587,
+                "auxillary_file_paths": [
+                    "results\\model_3_512\\Player\\Player-1499731.pt"
+                ]
+            },
+            {
+                "steps": 1999790,
+                "file_path": "results\\model_3_512\\Player\\Player-1999790.onnx",
+                "reward": -0.7293125689029694,
+                "creation_time": 1764882205.0027673,
+                "auxillary_file_paths": [
+                    "results\\model_3_512\\Player\\Player-1999790.pt"
+                ]
+            },
+            {
+                "steps": 2499838,
+                "file_path": "results\\model_3_512\\Player\\Player-2499838.onnx",
+                "reward": -0.021409167484803635,
+                "creation_time": 1764882488.9069738,
+                "auxillary_file_paths": [
+                    "results\\model_3_512\\Player\\Player-2499838.pt"
+                ]
+            },
+            {
+                "steps": 2903841,
+                "file_path": "results\\model_3_512\\Player\\Player-2903841.onnx",
+                "reward": null,
+                "creation_time": 1764882733.565523,
+                "auxillary_file_paths": [
+                    "results\\model_3_512\\Player\\Player-2903841.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 2903841,
+            "file_path": "results\\model_3_512\\Player.onnx",
+            "reward": null,
+            "creation_time": 1764882733.565523,
+            "auxillary_file_paths": [
+                "results\\model_3_512\\Player\\Player-2903841.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

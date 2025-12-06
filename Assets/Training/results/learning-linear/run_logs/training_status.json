@@ -1,0 +1,68 @@
+{
+    "difficulty": {
+        "lesson_num": 4
+    },
+    "Player": {
+        "checkpoints": [
+            {
+                "steps": 2999867,
+                "file_path": "results\\learning-linear\\Player\\Player-2999867.onnx",
+                "reward": 0.8099444839689467,
+                "creation_time": 1764891110.0576756,
+                "auxillary_file_paths": [
+                    "results\\learning-linear\\Player\\Player-2999867.pt"
+                ]
+            },
+            {
+                "steps": 3302282,
+                "file_path": "results\\learning-linear\\Player\\Player-3302282.onnx",
+                "reward": -0.8528771817684173,
+                "creation_time": 1764891352.073953,
+                "auxillary_file_paths": [
+                    "results\\learning-linear\\Player\\Player-3302282.pt"
+                ]
+            },
+            {
+                "steps": 3499945,
+                "file_path": "results\\learning-linear\\Player\\Player-3499945.onnx",
+                "reward": -1.178507685661316,
+                "creation_time": 1764891578.879707,
+                "auxillary_file_paths": [
+                    "results\\learning-linear\\Player\\Player-3499945.pt"
+                ]
+            },
+            {
+                "steps": 3999804,
+                "file_path": "results\\learning-linear\\Player\\Player-3999804.onnx",
+                "reward": -0.8405658414489344,
+                "creation_time": 1764891980.2368965,
+                "auxillary_file_paths": [
+                    "results\\learning-linear\\Player\\Player-3999804.pt"
+                ]
+            },
+            {
+                "steps": 4383528,
+                "file_path": "results\\learning-linear\\Player\\Player-4383528.onnx",
+                "reward": -0.41472886668311226,
+                "creation_time": 1764892300.1591678,
+                "auxillary_file_paths": [
+                    "results\\learning-linear\\Player\\Player-4383528.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 4383528,
+            "file_path": "results\\learning-linear\\Player.onnx",
+            "reward": -0.41472886668311226,
+            "creation_time": 1764892300.1591678,
+            "auxillary_file_paths": [
+                "results\\learning-linear\\Player\\Player-4383528.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}
