@@ -21,7 +21,7 @@ A reinforcement learning agent designed to play a simplified version of soccer i
 
 **Behavior Parameters**:
 
-- Observations: 17
+- **Observations**: 17 total
   - Ball's position relative to agent (x, y, z)
   - Opponent's goal position relative to agent (x, z)
   - Own goal position relative to agent (x, z)
@@ -30,7 +30,7 @@ A reinforcement learning agent designed to play a simplified version of soccer i
   - Agent's orientation (delta y)
   - Opponent's position relative to agent (x, z)
   - Opponent's velocity relative to agent(x, z)
-- Actions:
+- **Actions**: 3x3 discrete actions
   - Move Forward/Backward/Stay
   - Move Left/Right/Stay
   - Rotate Left/Right/Stay
