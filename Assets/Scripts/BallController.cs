@@ -5,7 +5,7 @@ public class BallController : MonoBehaviour
 {
     [HideInInspector]
     public SoccerEnv envController;
-    private Rigidbody rb;
+    public Rigidbody rb;
 
     private Vector3 startPosition;
     private static readonly float maxBallSpeed = 20f;
@@ -51,8 +51,8 @@ public class BallController : MonoBehaviour
     {
         rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxBallSpeed);
 
-        var BlueTeamGoal = envController.blueGoal.transform.position;
-        var RedTeamGoal = envController.redGoal.transform.position;
+        Vector3 BlueTeamGoal = envController.blueGoal.transform.position;
+        Vector3 RedTeamGoal = envController.redGoal.transform.position;
 
         if (new Vector2(rb.velocity.x, rb.velocity.z).magnitude < 1f)
             return;

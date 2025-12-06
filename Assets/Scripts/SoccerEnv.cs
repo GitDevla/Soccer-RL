@@ -21,6 +21,7 @@ enum LearningDifficulty
 
 public class SoccerEnv : MonoBehaviour
 {
+    [Header("Agents and Goals")]
     [SerializeField] private PlayerAgent redPlayerAgent;
     [SerializeField] public GameObject redGoal;
     [SerializeField] private PlayerAgent bluePlayerAgent;
@@ -28,12 +29,18 @@ public class SoccerEnv : MonoBehaviour
 
     [SerializeField] private BallController ball;
 
-
-    public int maxEnvironmentSteps = 2000;
+    [Header("Rewards")]
     public float kickReward = 0.4f;
     public float possessionReward = 0.003f;
     public float goalReward = 1.0f;
+
+    [Header("Environment")]
     private int resetTimer;
+    public int maxEnvironmentSteps = 2000;
+
+    public const float MAX_DISTANCE = 5f;
+    public const float MAX_AGENT_SPEED = 5f;
+    public const float MAX_BALL_SPEED = 20f;
 
     void Start()
     {
@@ -41,22 +48,18 @@ public class SoccerEnv : MonoBehaviour
 
         // Red Player
         redPlayerAgent.envController = this;
-        redPlayerAgent.ball = ball.transform;
-        redPlayerAgent.opponent = bluePlayerAgent.transform;
+        redPlayerAgent.ball = ball;
+        redPlayerAgent.opponent = bluePlayerAgent;
         redPlayerAgent.ownGoal = redGoal.transform;
         redPlayerAgent.opponentGoal = blueGoal.transform;
-        redPlayerAgent.opponentRb = bluePlayerAgent.GetComponent<Rigidbody>();
-        redPlayerAgent.ballRb = ball.GetComponent<Rigidbody>();
         redPlayerAgent.myTeam = Team.Red;
 
         // Blue Player
         bluePlayerAgent.envController = this;
-        bluePlayerAgent.ball = ball.transform;
-        bluePlayerAgent.opponent = redPlayerAgent.transform;
+        bluePlayerAgent.ball = ball;
+        bluePlayerAgent.opponent = redPlayerAgent;
         bluePlayerAgent.ownGoal = blueGoal.transform;
         bluePlayerAgent.opponentGoal = redGoal.transform;
-        bluePlayerAgent.opponentRb = redPlayerAgent.GetComponent<Rigidbody>();
-        bluePlayerAgent.ballRb = ball.GetComponent<Rigidbody>();
         bluePlayerAgent.myTeam = Team.Blue;
 
         ball.envController = this;
@@ -67,18 +70,18 @@ public class SoccerEnv : MonoBehaviour
     public void ResetScene()
     {
         ball.ResetBall();
-        var currentLearningDifficulty = Academy.Instance.EnvironmentParameters.GetWithDefault("difficulty", (int)LearningDifficulty.SelfPlay);
+        float currentLearningDifficulty = Academy.Instance.EnvironmentParameters.GetWithDefault("difficulty", (int)LearningDifficulty.SelfPlay);
         maxEnvironmentSteps = 2000;
 
         if (currentLearningDifficulty == (int)LearningDifficulty.Medium)
         {
-            var randomPos = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+            Vector3 randomPos = new(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
             ball.transform.position += randomPos;
         }
         else if (currentLearningDifficulty == (int)LearningDifficulty.Hard)
         {
-            var randomPos = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
-            var randomVelocity = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+            Vector3 randomPos = new(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+            Vector3 randomVelocity = new(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
             ball.transform.position += randomPos;
             ball.AddForce(randomVelocity.normalized * 2f);
             kickReward = 0.2f;
@@ -86,14 +89,14 @@ public class SoccerEnv : MonoBehaviour
         }
         else if (currentLearningDifficulty == (int)LearningDifficulty.Extreme)
         {
-            var randomPos = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
-            var randomVelocity = new Vector3(Random.Range(-1f, 2f), 0, Random.Range(-1f, 2f));
+            Vector3 randomPos = new(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+            Vector3 randomVelocity = new(Random.Range(-1f, 2f), 0, Random.Range(-1f, 2f));
             ball.transform.position += randomPos;
             ball.AddForce(randomVelocity.normalized * 1f);
-            var playerRandomPosZ = Random.Range(0, 4f);
-            var playerRandomPosX = Random.Range(-1, 1f);
+            float playerRandomPosZ = Random.Range(0, 4f);
+            float playerRandomPosX = Random.Range(-1, 1f);
             bluePlayerAgent.transform.position += new Vector3(playerRandomPosX, 0, playerRandomPosZ);
-            var playerRandomRotation = Random.Range(0, 360);
+            float playerRandomRotation = Random.Range(0, 360);
             bluePlayerAgent.transform.localRotation = Quaternion.Euler(0, playerRandomRotation, 0);
             kickReward = 0.2f;
             possessionReward = 0.002f;
